@@ -1,1 +1,0 @@
-# yonykikok.github.io
