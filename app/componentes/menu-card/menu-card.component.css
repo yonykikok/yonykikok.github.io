@@ -1,0 +1,11 @@
+img{
+    width: 30rem;
+    height: 30rem;
+}
+.button{
+    padding-left: 14%;
+    padding-right: 14%;
+    border-radius: 100px;
+    background-color: rgb(34, 111, 211);
+    color:white;
+}

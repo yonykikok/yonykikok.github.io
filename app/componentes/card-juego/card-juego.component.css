@@ -1,0 +1,30 @@
+.card-img-top{
+    max-height: 13em;
+}
+.centrado{
+    text-align: center;
+}
+.inline-block{
+    display: inline-block;
+}
+.hide-overflow-text{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+.hide-overflow-text:hover {
+    overflow: visible;
+    white-space: normal; 
+
+  }
+  .card-img{
+      width: 5rem;
+      float: left;
+  }
+  .card-title{
+      display: inline;
+  }
+ img{
+     width: 10rem;
+     height: 5rem;
+ }

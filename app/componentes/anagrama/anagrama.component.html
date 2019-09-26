@@ -1,0 +1,12 @@
+<app-cabecera title="Anagrama" srcLink="/Juegos" routerLinkk="/Juegos" nameRouterLink="Volver"
+  img="../../../assets/imagenes/anagrama.png" srcLinkBoolean="true"> </app-cabecera>
+<br>
+<div class="container centrado">
+  <div *ngIf="palabra" class="marginBottom">
+    <img *ngFor="let letra of arrayPalabra" src="../../../assets/imagenes/abc/{{letra}}.png" alt="">
+  </div>
+
+
+
+  <button class="btn btn-primary" (click)=cambiarPalabra()>cambiar palabra</button>
+</div>
