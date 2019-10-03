@@ -19,17 +19,20 @@ import { PiedraPTLSComponent } from '../componentes/piedra-p-t-l-s/piedra-p-t-l-
 import { PiedraPapelTijeraComponent } from '../componentes/piedra-papel-tijera/piedra-papel-tijera.component';
 import { AnagramaComponent } from '../componentes/anagrama/anagrama.component';
 import { LoginComponent } from '../componentes/login/login.component';
+import { ListadosComponent } from '../componentes/listados/listados.component';
+
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 // declaro donde quiero que se dirija
 const MiRuteo = [
   { path: 'Jugadores', component: JugadoresListadoComponent },
-  { path: '', component: PrincipalComponent },
+  { path: '', component: LoginComponent },
   { path: 'Login', component: LoginComponent },
   { path: 'Mapa', component: MapaDeGoogleComponent },
   { path: 'QuienSoy', component: QuienSoyComponent },
   { path: 'Registro', component: RegistroComponent },
   { path: 'Principal', component: PrincipalComponent },
-  { path: 'Listado', component: ListadoComponent },
+  { path: 'Listados', component: ListadosComponent },
   { path: 'Paises', component: ListadoDePaisesComponent },
   { path: 'Piedratls', component: PiedraPTLSComponent },
   { path: 'piedraPapelTijera', component: PiedraPapelTijeraComponent },

@@ -9,19 +9,22 @@ import { TimerObservable } from "rxjs/observable/TimerObservable";
   styleUrls: ['./agilidad-aritmetica.component.css']
 })
 export class AgilidadAritmeticaComponent implements OnInit {
+
+  juegoTerminado: boolean = false;
   @Output() enviarJuego: EventEmitter<any> = new EventEmitter<any>();
-  mostrar:boolean=false;
+  mostrar: boolean = false;
   operadores: string[] = ["*", "-", "/", "+"];
   @Input() nuevoJuego: JuegoAgilidad = new JuegoAgilidad();;
   ocultarVerificar: boolean;
   Tiempo: number;
   repetidor: any;
+  contadorGanadas = 0;
   private subscription: Subscription;
   ngOnInit() {
   }
   constructor() {
     this.ocultarVerificar = true;
-    this.Tiempo = 5;
+    this.Tiempo = 30;
     // this.nuevoJuego = new JuegoAgilidad();
     console.info("Inicio agilidad");
   }
@@ -31,26 +34,32 @@ export class AgilidadAritmeticaComponent implements OnInit {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
+  toggleJuegoTerminado() {
+    this.juegoTerminado = !this.juegoTerminado;
+    this.contadorGanadas = 0;
 
+  }
   NuevoJuego() {
+    this.mostrar = false;
     this.nuevoJuego = new JuegoAgilidad();
     this.nuevoJuego.numeroAleatorioUno = this.numeroAleatorio(0, 100);
     this.nuevoJuego.numeroAleatorioDos = this.numeroAleatorio(1, 10);
     this.nuevoJuego.operador = this.operadores[this.numeroAleatorio(0, 4)];
-    console.log(this.nuevoJuego.numeroAleatorioUno);
-    console.log(this.nuevoJuego.operador);
-    console.log(this.nuevoJuego.numeroAleatorioDos);
+    // console.log(this.nuevoJuego.numeroAleatorioUno);
+    // console.log(this.nuevoJuego.operador);
+    // console.log(this.nuevoJuego.numeroAleatorioDos);
     this.ocultarVerificar = false;
     this.repetidor = setInterval(() => {
       this.Tiempo--;
       // console.log("llego", this.Tiempo);
       if (this.Tiempo == 0) {
+        this.juegoTerminado = true;
         clearInterval(this.repetidor);
         this.verificar();
         this.ocultarVerificar = true;
-        this.Tiempo = 5;
+        this.Tiempo = 30;
       }
-    }, 900);
+    }, 1000);
 
   }
   calcularResultado() {
@@ -72,16 +81,27 @@ export class AgilidadAritmeticaComponent implements OnInit {
     this.ocultarVerificar = false;
 
     let resultado = (this.calcularResultado());
-    console.log(resultado);
-    console.log(this.nuevoJuego.numeroIngresado);
+    // console.log(resultado);
+    // console.log(this.nuevoJuego.numeroIngresado);
     if (resultado == this.nuevoJuego.numeroIngresado) {
-      this.mostrar=false;
-      console.log("BIEN");
-      this.nuevoJuego.gano=true;
+      this.mostrar = false;
+      // console.log("BIEN");
+      this.nuevoJuego.gano = true;
+      this.ocultarVerificar = true;
+      let sonido = new Audio('../../../assets/audios/success.wav');
+      sonido.play();
+      this.contadorGanadas++;
     }
-    else
-    {
-      this.mostrar=true;
+    else if (this.nuevoJuego.numeroIngresado) {
+      this.mostrar = true;
+      let sonido = new Audio('../../../assets/audios/fail.wav');
+      sonido.play();
+    }
+    else {
+      let sonido = new Audio('../../../assets/audios/fail.wav');
+      sonido.play();
+      this.ocultarVerificar = true;
+      this.NuevoJuego();
     }
     clearInterval(this.repetidor);
   }

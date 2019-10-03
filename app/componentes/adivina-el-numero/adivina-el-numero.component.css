@@ -5,7 +5,7 @@
 .container
 {
 border-radius: 30px;
-    background: url("../../../assets/imagenes/background-numbers.PNG") no-repeat center center/ cover;
+background: url("../../../assets/imagenes/background-numbers.PNG") no-repeat center center/ cover;
 }
 input{
     display: inline-block;

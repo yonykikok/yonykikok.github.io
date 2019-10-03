@@ -47,6 +47,10 @@ import { PiedraPTLSComponent } from './componentes/piedra-p-t-l-s/piedra-p-t-l-s
 import { AlertaCustomComponent } from './componentes/alerta-custom/alerta-custom.component';
 import { GrabadorDeVozComponent } from './componentes/grabador-de-voz/grabador-de-voz.component';
 import { PiedraPapelTijeraComponent } from './componentes/piedra-papel-tijera/piedra-papel-tijera.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule} from '@angular/fire/auth';
+import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,7 +86,6 @@ import { PiedraPapelTijeraComponent } from './componentes/piedra-papel-tijera/pi
     AlertaCustomComponent,
     GrabadorDeVozComponent,
     PiedraPapelTijeraComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,8 @@ import { PiedraPapelTijeraComponent } from './componentes/piedra-papel-tijera/pi
     ReactiveFormsModule,
     RuteandoModule,
     HttpClientModule, 
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyB6f8x4IjRlesQ3oETc6BXYQHVRTOlY3Ys'
     })

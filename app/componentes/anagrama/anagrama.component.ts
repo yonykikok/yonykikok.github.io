@@ -8,8 +8,12 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AnagramaComponent implements OnInit {
 
   @Input() palabra: string;
-  arrayPalabra:string[];
-  mostrarPalabra:boolean=false;
+  @Input() intentos:number=0;
+  arrayPalabra: string[];
+  mostrarPalabraSecreta: boolean = false;
+  mostrar: boolean = false;
+  empesarPartida: boolean = false;
+  palabraIngresada: string;
 
   abecedario: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
   palabras: string[] = ["abrelatas", "disposicion", "parlante",
@@ -29,7 +33,7 @@ export class AnagramaComponent implements OnInit {
     "cable", "Juanita", "silla",
     "calculadora", "juguete", "sonido",
     "carpeta", "Julio", "Spotify",
-    "vcartera", "La,Coruña", "suciedad",
+    "cartera", "La", "lampara", "suciedad",
     "celular", "loros", "sustancia",
     "cerradura", "Louisiana", "televidente",
     "cesped", "manantial", "televisor",
@@ -46,16 +50,40 @@ export class AnagramaComponent implements OnInit {
     "Dinamarca", "telefono", "vidrio",
     "asiento", "pantalla", "violin",
     "bateria", "Paris", "visita"];
-  constructor() { 
+  constructor() {
+  }
+  comenzar() {
+    this.empesarPartida = !this.empesarPartida;
+    this.cambiarPalabra();
+  }
+  mostrarPalabra() {
+    this.mostrarPalabraSecreta = !this.mostrarPalabraSecreta;
+  }
+  cambiarEstado() {
+    this.mostrar = !this.mostrar;
+  }
+  ngOnInit() {
   }
 
-  ngOnInit() {
+  compararPalabra() {
+    console.log(this.palabra);
+    if (this.palabraIngresada == this.palabra) {
+      let audio=new Audio('../../../assets/audios/success.wav');
+      audio.play();
+      this.cambiarPalabra();
+      this.intentos=0;
+    }
+    else {
+      this.intentos++;
+      let audio=new Audio('../../../assets/audios/fail.wav');
+      audio.play();
+    }
   }
   // Retorna un número aleatorio entre min (incluido) y max (excluido)
   numeroRandom(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
-//con esta funcion ordeno la palabra de 'A' a la 'Z'
+  //con esta funcion ordeno la palabra de 'A' a la 'Z'
   desordenarPalabra(arrayLetras) {
     let i = 0;
     let palabraDesordenada = new Array;
@@ -68,18 +96,20 @@ export class AnagramaComponent implements OnInit {
     });
     return palabraDesordenada;
   }
-  mostrarImagenesDePalabra()
-  {
+  mostrarImagenesDePalabra() {
     this.arrayPalabra.forEach(letra => {
-      
+
     });
   }
   cambiarPalabra() {
+    this.mostrarPalabraSecreta = false;
+    this.mostrar = false;
     let numeroRandom = this.numeroRandom(0, 101);
     this.palabra = this.palabras[numeroRandom].toLocaleLowerCase();
     let arrayLetras = this.separarPalabras(this.palabra);
-    this.arrayPalabra=this.desordenarPalabra(arrayLetras);
+    this.arrayPalabra = this.desordenarPalabra(arrayLetras);
     this.mostrarImagenesDePalabra();
+    this.palabraIngresada="";
   }
 
   separarPalabras(palabra) {

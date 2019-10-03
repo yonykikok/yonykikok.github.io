@@ -12,6 +12,7 @@ export class CardImgTopComponent implements OnInit {
   @Input() img:string;
   @Input() mostrarBoton:boolean=false;
   @Input() routerLinkk:string;
+  
   constructor() { }
 
   ngOnInit() {

@@ -19,6 +19,7 @@ export class CardJuegoComponent implements OnInit {
   @Input() description: string;
   @Input() img: string;
   @Input() routerLinkk: string;
+  @Input() clases:string;
 
   constructor(public formBuilder: FormBuilder) {
 

@@ -1,35 +1,21 @@
-<div class="container">
-  <div>
+<app-cabecera title="Login" img="../../../assets/imagenes/utn.png"> </app-cabecera>
+<div class="container centrado">
+  <div class="header-Login shadow-pop-tr">
+    <img id="imgPerfil " src="./assets/imagenes/login.png" alt="Avatar">
+  </div>
+  <br>
+  <div class="body-login col-6 offset-3 shadow-pop-tr">
     <form>
-      <div>
-        <img src="./assets/imagenes/login.png" alt="Avatar">
+      <div class="form-group">
+        <input type="email" class="form-control centrado" [(ngModel)]="user.email" name="email"
+          placeholder="Enter email">
       </div>
-
-      <div class="container">
-        <label><b>Usuario</b></label>
-        <input type="text" placeholder="Usuario" [(ngModel)]="usuario" name="uname" required>
-
-        <label><b>Clave</b></label>
-        <input type="password" placeholder="Clave" [(ngModel)]="clave" name="psw" required>
-
-        <button *ngIf="logeando" (click)="MoverBarraDeProgreso()">Ingresar</button>
-
-        <div *ngIf="!logeando">
-          <div class="progress-bar progress-bar-info progress-bar-striped active" [class]="clase" role="progressbar"
-            aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" [style.width]="ProgresoDeAncho">
-            {{progresoMensaje}} - {{progreso}}%
-          </div>
-        </div>
-
-        <input type="checkbox" checked="checked"> Recordar mis datos
+      <div class="form-group">
+        <input type="password" class="form-control centrado" [(ngModel)]="user.password" name="password"
+          placeholder="Password">
       </div>
-
-      <div class="container" >
-        <button type="button">Cancelar</button>
-        <button type="button"routerLink="/Registro">Registrarse</button>
-        <span>Te olvidaste <a href="#">la clave?</a></span>
-      </div>
-
+      <button type="submit" class="btn btn-primary col-4" (click)="onLogin()">Ingresar</button>
+      <button type="submit" class="btn btn-success col-4 offset-2" routerLink="/Registro">Registrarse</button>
     </form>
   </div>
 </div>
