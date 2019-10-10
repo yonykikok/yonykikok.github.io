@@ -23,8 +23,10 @@ export class LoginComponent implements OnInit {
     const user =await this.authService.onLogin(this.user);
     if(user)
     {
+      console.info( this.authService.usuarioLogeado());
       console.info("LOGIN exitoso");
-      this.router.navigateByUrl('/Principal');
+       this.router.navigateByUrl('/Principal');
+     // this.router.navigateByUrl('/Piedratls');
     }
   }
 

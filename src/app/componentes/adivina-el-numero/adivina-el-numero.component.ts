@@ -1,7 +1,8 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { JuegoAdivina } from '../../clases/juego-adivina'
-
+import { AuthService } from 'src/app/servicios/auth.service';
+import { LocalStorageService } from 'src/app/servicios/local-storage.service';
 @Component({
   selector: 'app-adivina-el-numero',
   templateUrl: './adivina-el-numero.component.html',
@@ -14,8 +15,23 @@ export class AdivinaElNumeroComponent implements OnInit {
   Mensajes: string;
   contador: number;
   ocultarVerificar: boolean;
+  mostrarAyuda: boolean = false;
+  ayuda: string;
+  //---puntaje
+  esTop1: boolean = false;
+  emailUsuarioActual: string;
+  //fin puntaje
 
-  constructor() {
+  ngOnInit() {
+    this.obtenerMailDeUsuarioActual();
+  }
+  async obtenerMailDeUsuarioActual() {
+    const user = await this.authService.usuarioLogeado();
+    if (user) {
+      this.emailUsuarioActual = user.email;
+    }
+  }
+  constructor(private authService: AuthService, private localStorageService: LocalStorageService) {
     this.nuevoJuego = new JuegoAdivina();
     console.info("numero Secreto:", this.nuevoJuego.numeroSecreto);
     this.ocultarVerificar = false;
@@ -24,49 +40,69 @@ export class AdivinaElNumeroComponent implements OnInit {
     this.nuevoJuego.generarnumero();
     this.contador = 0;
   }
+
+  mostrarMensajeDeAyuda() {
+    this.ayuda = this.nuevoJuego.retornarAyuda();
+    this.verificar();
+  }
   verificar() {
     this.contador++;
+    let audio;
     this.ocultarVerificar = true;
     console.info("numero Secreto:", this.nuevoJuego.gano);
     if (this.nuevoJuego.verificar()) {
-
+      audio = new Audio('../../../assets/audios/success.wav');
+      audio.play();
       this.enviarJuego.emit(this.nuevoJuego);
       this.MostarMensaje("Sos un Genio!!!", true);
       this.nuevoJuego.numeroSecreto = 0;
 
     } else {
-
+      audio = new Audio('../../../assets/audios/fail.wav');
+      audio.play();
       let mensaje: string;
       switch (this.contador) {
         case 1:
-          mensaje = "No, intento fallido, animo";
+          mensaje = "Fallaste, animo vuelve a intentar";
           break;
         case 2:
-          mensaje = "No,Te estaras Acercando???";
+          mensaje = "Fallaste otra ves,Te estaras Acercando???";
           break;
         case 3:
-          mensaje = "No es, Yo crei que la tercera era la vencida.";
+          mensaje = "Lastima, Yo crei que la tercera era la vencida.";
           break;
         case 4:
-          mensaje = "No era el  " + this.nuevoJuego.numeroIngresado;
+          mensaje = "Tampoco era el " + this.nuevoJuego.numeroIngresado;
           break;
         case 5:
-          mensaje = " intentos y nada.";
+          this.mostrarAyuda = true;
+          mensaje = "Estoy empezando a creer que no saldra. Revisa la ayuda";
           break;
         case 6:
           mensaje = "Afortunado en el amor";
           break;
         default:
           mensaje = "Ya le erraste " + this.contador + " veces";
+          if (this.contador == 10) {
+            mensaje = "Lo siento la proxima sera!";
+            this.terminarJuego();
+          }
           break;
       }
-      this.MostarMensaje("#" + this.contador + " " + mensaje + " ayuda :" + this.nuevoJuego.retornarAyuda());
+      this.MostarMensaje("#" + this.contador + " " + mensaje);
 
 
     }
     console.info("numero Secreto:", this.nuevoJuego.gano);
   }
- 
+  terminarJuego() {
+    this.ocultarVerificar = true;
+    this.mostrarAyuda = false;
+    this.nuevoJuego.numeroSecreto = 0;
+    this.localStorageService.guardarPuntuacionEnLocalStorage(this.emailUsuarioActual,'adivina',this.contador);
+    // this.esTop1= this.localStorageService.verificarSiSuperoAlTopEnMenosIntentos();
+
+  }
   MostarMensaje(mensaje: string = "este es el mensaje", ganador: boolean = false) {
     this.Mensajes = mensaje;
     var x = document.getElementById("snackbar");
@@ -83,7 +119,6 @@ export class AdivinaElNumeroComponent implements OnInit {
     console.info("objeto", x);
 
   }
-  ngOnInit() {
-  }
+
 
 }

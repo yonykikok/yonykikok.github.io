@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Jugador } from 'src/app/clases/jugador';
+import { AuthService } from 'src/app/servicios/auth.service';
+import { LocalStorageService } from 'src/app/servicios/local-storage.service';
 @Component({
   selector: 'app-piedra-papel-tijera',
   templateUrl: './piedra-papel-tijera.component.html',
@@ -17,9 +19,24 @@ export class PiedraPapelTijeraComponent implements OnInit {
   partidaTerminada: boolean = false;
   mensajePartida: string;
   imagenG_P: string;
-  constructor() { }
+  //puntuaciones
+  // listaDeJugadores: Jugador[] = new Array();
+  esTop1: boolean = false;
+  emailUsuarioActual: string;
+  //fin puntuaciones 
+
+  constructor(private authService: AuthService, private localStorageService: LocalStorageService) { }
   opcionesDeJuego = ["piedra", "papel", "tijera"];
   ngOnInit() {
+    this.obtenerMailDeUsuarioActual();
+  }
+
+
+  async obtenerMailDeUsuarioActual() {
+    const user = await this.authService.usuarioLogeado();
+    if (user) {
+      this.emailUsuarioActual = user.email;
+    }
   }
   reproducirExplicacion() {
     let audio = new Audio('../../../assets/audios/ppt.wav');
@@ -93,6 +110,10 @@ export class PiedraPapelTijeraComponent implements OnInit {
     document.getElementById("headerCardReglas").setAttribute('class', "card");
   }
   terminarPartida() {
+    this.localStorageService.guardarPuntuacionEnLocalStorage(this.emailUsuarioActual, 'ppt', this.contadorGanadas);
+    this.esTop1 = this.localStorageService.verificarSiSuperoAlTop();
+
+
     let sonido;
 
     if (this.contadorGanadas > this.contadorPerdidas) {

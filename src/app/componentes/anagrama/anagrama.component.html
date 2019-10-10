@@ -4,10 +4,10 @@
 <div class="container centrado col-8">
   <br>
 
-  <div *ngIf="palabra" class="marginBottom overflowHidden">
+  <div *ngIf="palabra && empesarPartida" class="marginBottom overflowHidden">
     <div id="divContadorIntentos">
-      <h5>Intentos</h5>
-      <p>{{intentos}}</p>
+      <h5>Vidas</h5>
+      <p>{{vidas}}</p>
     </div>
     <img *ngFor="let letra of arrayPalabra" src="../../../assets/imagenes/abc/{{letra}}.png">
   </div>
@@ -21,7 +21,7 @@
       <h1 *ngIf="mostrarPalabraSecreta">La palabra era: "{{palabra}}"</h1>
     </div>
     <div class=" entradaDerecha">
-      <button class="btn btn-primary col-3" (click)=cambiarPalabra()>cambiar palabra</button>
+      <button class="btn btn-primary col-3" (click)=cambiarPalabraYDescontar()>cambiar palabra</button>
     </div>
     <div class=" entradaIzquierda">
       <button class="btn btn-danger col-3" *ngIf="!mostrar" (click)=cambiarEstado()>

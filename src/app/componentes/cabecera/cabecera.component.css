@@ -1,3 +1,6 @@
+*{
+    font-family: monospace;
+}
 .panel
 {
     height: 200px;
@@ -16,11 +19,11 @@
     border-radius: 10px;
     }
 
-.specialPosition{
+/* .specialPosition{
     margin-top:2em;
     position: absolute;
     float: left;
-}
+} */
 .specialPosition>a:last-child{
     margin-left: 20px;
 }

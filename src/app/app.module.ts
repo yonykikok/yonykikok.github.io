@@ -50,6 +50,8 @@ import { PiedraPapelTijeraComponent } from './componentes/piedra-papel-tijera/pi
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule} from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
+import { Top3GameComponent } from './componentes/top3-game/top3-game.component';
+import { DialogJugadorComponent } from './componentes/dialog-jugador/dialog-jugador.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import { environment } from 'src/environments/environment';
     AlertaCustomComponent,
     GrabadorDeVozComponent,
     PiedraPapelTijeraComponent,
+    Top3GameComponent,
+    DialogJugadorComponent,
   ],
   imports: [
     BrowserModule,

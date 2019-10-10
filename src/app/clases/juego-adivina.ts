@@ -28,6 +28,9 @@ export class JuegoAdivina extends  Juego {
         if (this.numeroIngresado < this.numeroSecreto) {
           return "Falta";
         }
+        else if(this.numeroIngresado == this.numeroSecreto){
+          return "Le pegaste";
+        }
         return "Te pasate";
       }
 }

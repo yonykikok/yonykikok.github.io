@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { JuegoAgilidad } from '../../clases/juego-agilidad'
-
-import { Subscription } from "rxjs";
-import { TimerObservable } from "rxjs/observable/TimerObservable";
+import { AuthService } from 'src/app/servicios/auth.service';
+import { LocalStorageService } from 'src/app/servicios/local-storage.service';
 @Component({
   selector: 'app-agilidad-aritmetica',
   templateUrl: './agilidad-aritmetica.component.html',
@@ -19,10 +18,25 @@ export class AgilidadAritmeticaComponent implements OnInit {
   Tiempo: number;
   repetidor: any;
   contadorGanadas = 0;
-  private subscription: Subscription;
+
+  //---puntajes
+  esTop1: boolean = false;
+  emailUsuarioActual: string;
+  //------------
   ngOnInit() {
+
+    this.obtenerMailDeUsuarioActual();
   }
-  constructor() {
+  async obtenerMailDeUsuarioActual() {
+    const user = await this.authService.usuarioLogeado();
+    if (user) {
+      this.emailUsuarioActual = user.email;
+    }
+  }
+
+
+
+  constructor(private localStorageService: LocalStorageService, private authService: AuthService) {
     this.ocultarVerificar = true;
     this.Tiempo = 30;
     // this.nuevoJuego = new JuegoAgilidad();
@@ -45,14 +59,13 @@ export class AgilidadAritmeticaComponent implements OnInit {
     this.nuevoJuego.numeroAleatorioUno = this.numeroAleatorio(0, 100);
     this.nuevoJuego.numeroAleatorioDos = this.numeroAleatorio(1, 10);
     this.nuevoJuego.operador = this.operadores[this.numeroAleatorio(0, 4)];
-    // console.log(this.nuevoJuego.numeroAleatorioUno);
-    // console.log(this.nuevoJuego.operador);
-    // console.log(this.nuevoJuego.numeroAleatorioDos);
     this.ocultarVerificar = false;
+
     this.repetidor = setInterval(() => {
       this.Tiempo--;
-      // console.log("llego", this.Tiempo);
       if (this.Tiempo == 0) {
+        this.localStorageService.guardarPuntuacionEnLocalStorage(this.emailUsuarioActual, 'agilidad', this.contadorGanadas);
+        this.esTop1 = this.localStorageService.verificarSiSuperoAlTop();
         this.juegoTerminado = true;
         clearInterval(this.repetidor);
         this.verificar();
@@ -81,11 +94,8 @@ export class AgilidadAritmeticaComponent implements OnInit {
     this.ocultarVerificar = false;
 
     let resultado = (this.calcularResultado());
-    // console.log(resultado);
-    // console.log(this.nuevoJuego.numeroIngresado);
     if (resultado == this.nuevoJuego.numeroIngresado) {
       this.mostrar = false;
-      // console.log("BIEN");
       this.nuevoJuego.gano = true;
       this.ocultarVerificar = true;
       let sonido = new Audio('../../../assets/audios/success.wav');
@@ -96,6 +106,7 @@ export class AgilidadAritmeticaComponent implements OnInit {
       this.mostrar = true;
       let sonido = new Audio('../../../assets/audios/fail.wav');
       sonido.play();
+      this.NuevoJuego();
     }
     else {
       let sonido = new Audio('../../../assets/audios/fail.wav');

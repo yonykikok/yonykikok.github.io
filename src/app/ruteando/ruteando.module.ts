@@ -29,15 +29,14 @@ const MiRuteo = [
   { path: '', component: LoginComponent },
   { path: 'Login', component: LoginComponent },
   { path: 'Mapa', component: MapaDeGoogleComponent },
-  { path: 'QuienSoy', component: QuienSoyComponent },
+  { path: 'QuienSoy', component: QuienSoyComponent,canActivate:[AuthGuard] },
   { path: 'Registro', component: RegistroComponent },
-  { path: 'Principal', component: PrincipalComponent },
-  { path: 'Listados', component: ListadosComponent },
+  { path: 'Principal', component: PrincipalComponent,canActivate:[AuthGuard] },
+  { path: 'Listados', component: ListadosComponent,canActivate:[AuthGuard] },
   { path: 'Paises', component: ListadoDePaisesComponent },
-  { path: 'Piedratls', component: PiedraPTLSComponent },
-  { path: 'piedraPapelTijera', component: PiedraPapelTijeraComponent },
-  { path: 'anagrama', component: AnagramaComponent },
-
+  { path: 'Piedratls', component: PiedraPTLSComponent,canActivate:[AuthGuard] },
+  { path: 'piedraPapelTijera', component: PiedraPapelTijeraComponent,canActivate:[AuthGuard] },
+  { path: 'anagrama', component: AnagramaComponent,canActivate:[AuthGuard] },
   {
     path: 'Juegos',
     component: JuegosComponent,
@@ -46,7 +45,7 @@ const MiRuteo = [
       { path: 'Adivina', component: AdivinaElNumeroComponent },
       { path: 'AdivinaMasListado', component: AdivinaMasListadoComponent },
       { path: 'AgilidadaMasListado', component: AgilidadMasListadoComponent },
-      { path: 'Agilidad', component: AgilidadAritmeticaComponent }]
+      { path: 'Agilidad', component: AgilidadAritmeticaComponent }],canActivate:[AuthGuard]
   },
   { path: '**', component: ErrorComponent },
   { path: 'error', component: ErrorComponent }];

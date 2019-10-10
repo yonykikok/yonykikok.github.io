@@ -1,3 +1,6 @@
+*{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 .imagenDeQuienSoy{
     width: 100%;
    
@@ -72,23 +75,23 @@ p {font-size: 16px;}
         width:18em;
         height: 18em;
         padding: 6em;
-        background-color: red;
+        background-color: rgba(255, 0, 0, 0.500);
 
     }
     50%{
         padding: 2em;
-        background-color: blue;
+        background-color: rgba(0, 0, 255, 0.500);
     }
     75%{
         
         padding: 6em;
-        background-color: yellow;
+        background-color: rgba(255, 255, 0, 0.500);
     }
 
     85%{
         padding-left: 10em;
         padding-right: 10em;
-        background-color: green;
+        background-color: rgba(0, 128, 0, 0.500);
     }
     to{
 

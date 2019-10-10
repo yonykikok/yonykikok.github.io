@@ -9,7 +9,6 @@ export class AuthService {
   public isLogged: any = false;
 
   constructor(public angularFireAuth: AngularFireAuth) {
-
     angularFireAuth.authState.subscribe(user => (this.isLogged = user));
 
   }
@@ -27,6 +26,13 @@ export class AuthService {
     }
   }
 
+  async usuarioLogeado() {
+    try {
+      return await this.angularFireAuth.auth.currentUser;
+    } catch (error) {
+      console.info("ERROR, al obtener el usuario logeado: ", error)
+    }
+  }
   //register
   async onRegister(user: User) {
     try {

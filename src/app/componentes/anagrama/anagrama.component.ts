@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-
+import { LocalStorageService } from 'src/app/servicios/local-storage.service';
+import { AuthService } from 'src/app/servicios/auth.service';
 @Component({
   selector: 'app-anagrama',
   templateUrl: './anagrama.component.html',
@@ -7,77 +8,82 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class AnagramaComponent implements OnInit {
 
+  puntaje: number = 0;
   @Input() palabra: string;
-  @Input() intentos:number=0;
+  @Input() vidas: number = 5;
   arrayPalabra: string[];
   mostrarPalabraSecreta: boolean = false;
   mostrar: boolean = false;
   empesarPartida: boolean = false;
   palabraIngresada: string;
+  //---puntaje
+  esTop1: boolean = false;
+  emailUsuarioActual: string;
+  //fin puntaje
 
-  abecedario: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  palabras: string[] = ["abrelatas", "disposicion", "parlante",
-    "aire", "mesa", "PC",
-    "libros", "escuela", "pelusa",
-    "Andres", "esfera", "periferico",
-    "animal", "esquina", "perro",
-    "casco", "Eugenia", "piscinas",
-    "pasto", "cuaderno", "planta",
-    "Argentina", "Fernanda", "Polonia",
-    "atomo", "Francia", "posavasos",
-    "Belen", "galleta", "programa",
-    "Beto", "Guadalupe", "puerta",
-    "boton", "guitarra", "quimica",
-    "Brasil", "hoja", "rectangulo",
-    "Bruselas", "idea", "ropa",
-    "cable", "Juanita", "silla",
-    "calculadora", "juguete", "sonido",
-    "carpeta", "Julio", "Spotify",
-    "cartera", "La", "lampara", "suciedad",
-    "celular", "loros", "sustancia",
-    "cerradura", "Louisiana", "televidente",
-    "cesped", "manantial", "televisor",
-    "Chile", "Mariano", "tierra",
-    "notebook", "mausoleo", "tigre",
-    "circulo", "mesa", "Tomas",
-    "ciudad", "Mexico", "trabajador",
-    "ciruela", "molecula", "trabajo",
-    "claridad", "mouse", "triangulo",
-    "clavel", "mueble", "tulipan",
-    "competencia", "Nicolas", "utensilio",
-    "computadora", "notas", "vaso",
-    "cuerda", "Nueva York", "ventana",
-    "Dinamarca", "telefono", "vidrio",
-    "asiento", "pantalla", "violin",
-    "bateria", "Paris", "visita"];
-  constructor() {
+  constructor(private authService: AuthService, private localStorageService: LocalStorageService) {
+
   }
+  ngOnInit() {
+    this.obtenerMailDeUsuarioActual();
+  }
+
+  async obtenerMailDeUsuarioActual() {
+    const user = await this.authService.usuarioLogeado();
+    if (user) {
+      this.emailUsuarioActual = user.email;
+    }
+  }
+  abecedario: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+  palabras: string[] = ["abrelatas", "disposicion", "parlante", "aire", "mesa", "PC", "libros", "escuela", "pelusa",
+    "Andres", "esfera", "periferico", "animal", "esquina", "perro", "casco", "Eugenia", "piscinas", "pasto", "cuaderno", "planta",
+    "Argentina", "Fernanda", "Polonia", "atomo", "Francia", "posavasos", "Belen", "galleta", "programa", "Beto", "Guadalupe", "puerta",
+    "boton", "guitarra", "quimica", "Brasil", "hoja", "rectangulo", "Bruselas", "idea", "ropa", "cable", "Juanita", "silla", "calculadora", "juguete", "sonido", "carpeta", "Julio", "Spotify",
+    "cartera", "La", "lampara", "suciedad", "celular", "loros", "sustancia", "cerradura", "Louisiana", "televidente", "cesped", "manantial", "televisor", "Chile", "Mariano", "tierra",
+    "notebook", "mausoleo", "tigre", "circulo", "mesa", "Tomas", "ciudad", "Mexico", "trabajador", "ciruela", "molecula", "trabajo",
+    "claridad", "mouse", "triangulo", "clavel", "mueble", "tulipan", "competencia", "Nicolas", "utensilio", "computadora", "notas", "vaso", "cuerda", "Nueva York", "ventana", "Dinamarca", "telefono", "vidrio", "asiento", "pantalla", "violin", "bateria", "Paris", "visita"];
+
   comenzar() {
     this.empesarPartida = !this.empesarPartida;
     this.cambiarPalabra();
   }
   mostrarPalabra() {
     this.mostrarPalabraSecreta = !this.mostrarPalabraSecreta;
+    this.vidas--;
+    setTimeout(() => {
+      this.cambiarPalabra();
+    }, 4000);
   }
   cambiarEstado() {
     this.mostrar = !this.mostrar;
   }
-  ngOnInit() {
-  }
+
 
   compararPalabra() {
     console.log(this.palabra);
     if (this.palabraIngresada == this.palabra) {
-      let audio=new Audio('../../../assets/audios/success.wav');
+      let audio = new Audio('../../../assets/audios/success.wav');
       audio.play();
       this.cambiarPalabra();
-      this.intentos=0;
+      this.vidas++;
+      this.puntaje++;
     }
     else {
-      this.intentos++;
-      let audio=new Audio('../../../assets/audios/fail.wav');
+      this.vidas--;
+      let audio = new Audio('../../../assets/audios/fail.wav');
       audio.play();
     }
+    if (this.vidas == 0) {
+      this.terminarPartida();
+    }
+
+  }
+  terminarPartida() {
+    this.localStorageService.guardarPuntuacionEnLocalStorage(this.emailUsuarioActual, 'anagrama', this.puntaje);
+    this.esTop1 = this.localStorageService.verificarSiSuperoAlTop();
+    this.empesarPartida = false;
+    this.vidas = 5;
+    this.puntaje = 0;
   }
   // Retorna un número aleatorio entre min (incluido) y max (excluido)
   numeroRandom(min, max) {
@@ -101,7 +107,14 @@ export class AnagramaComponent implements OnInit {
 
     });
   }
+  cambiarPalabraYDescontar() {
+    this.vidas--;
+    this.cambiarPalabra();
+  }
   cambiarPalabra() {
+    if (this.vidas == 0) {
+      this.terminarPartida();
+    }
     this.mostrarPalabraSecreta = false;
     this.mostrar = false;
     let numeroRandom = this.numeroRandom(0, 101);
@@ -109,7 +122,7 @@ export class AnagramaComponent implements OnInit {
     let arrayLetras = this.separarPalabras(this.palabra);
     this.arrayPalabra = this.desordenarPalabra(arrayLetras);
     this.mostrarImagenesDePalabra();
-    this.palabraIngresada="";
+    this.palabraIngresada = "";
   }
 
   separarPalabras(palabra) {

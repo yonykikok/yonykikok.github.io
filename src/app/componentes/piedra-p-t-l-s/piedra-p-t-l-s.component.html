@@ -20,6 +20,8 @@
 </div>
 <!-- fin Card reglas de juego -->
 <div class="container centrado" id="contenedorPrincipal">
+        <img src="../../../assets/imagenes/corona.png" *ngIf="esTop1"  id="imgCorona" alt="top1">
+
     <label (click)="mostrarCardReglas()" class="hvr-rectangle-out">Como se juega?</label>
     <div class="row">
         <div class="col-2 centrado">
@@ -37,7 +39,7 @@
                     *ngIf="mostrarQuienGano && !partidaTerminada"> {{mensajePartida}}</button>
             </div>
             <div *ngIf="partidaTerminada">
-                <app-alerta-custom imagen=""></app-alerta-custom>
+                <!-- <app-alerta-custom imagen=""></app-alerta-custom> -->
                 <img id="imgWL" src="{{imagenG_P}}" alt="imagen resultado de partida">
             </div>
             <div class="centrado">
